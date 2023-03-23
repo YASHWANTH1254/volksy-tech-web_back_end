@@ -1,36 +1,31 @@
-const http = require('http');
-const countStudents = require('./3-read_file_async');
+const chai = require('chai');
+const chaiHttp = require('chai-http');
 
-const hostname = '127.0.0.1';
-const port = 1245;
+process.argv[2] = './database.csv';
+const app = require('./5-http');
 
-const app = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  switch (req.url) {
-    case '/':
-      res.writeHead(200);
-      res.end('Hello Holberton School!');
-      break;
-    case '/students':
-      res.writeHead(200);
-      res.write('This is the list of our students\n');
-      countStudents(process.argv[2])
-        .then((data) => {
-          res.end(data);
-        })
-        .catch((error) => {
-          res.end(error.message);
-        });
-      break;
-    default:
-      res.writeHead(404);
-      res.end(JSON.stringify({ error: 'Resource not found' }));
-  }
+chai.use(chaiHttp);
+chai.should();
+
+describe('More complex HTTP server using node', () => {
+  describe('/students endpoint', () => {
+    describe('When the database is available', () => {
+      before(() => {
+        process.argv[2] = './database.csv';
+      })
+      it('Returns the right content', (done) => {
+        chai.request(app)
+          .get('/students')
+          .end((error, response) => {
+            chai.expect(response.statusCode).to.equal(200);
+            chai.expect(response.text).to.have.string(`This is the list of our students
+Number of students: 10
+Number of students in CS: 6. List: Johenn, Arielle, Jonathen, Emmenuel, Guillaume, Katie
+Number of students in SWE: 4. List: Guillaume, Joseph, Paul, Tommy`);
+            done();
+
+          });
+      });
+    });
+  });
 });
-
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
-
-module.exports = app;
