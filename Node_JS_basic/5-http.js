@@ -16,12 +16,14 @@ const app = http.createServer(async (req, res) => {
 
   if (url === '/') {
     res.write('Hello Holberton School!');
-  } else if (url === '/students') {
+  }
+	else if (url === '/students') {
     res.write('This is the list of our students\n');
     try {
       const students = await countStudents(DATABASE);
       res.end(`${students.join('\n')}`);
-    } catch (error) {
+    } 
+    catch (error) {
       res.end(error.message);
     }
   }
@@ -29,7 +31,7 @@ const app = http.createServer(async (req, res) => {
   res.end();
 });
 
-app.listen(port, hostname, () => {
+app.listen(port, hostname, (1245, '127.0.0.1') => {
   //   console.log(`Server running at http://${hostname}:${port}/`);
 });
 
