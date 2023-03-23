@@ -16,14 +16,14 @@ app.get('/students', async (req, res) => {
   const msg = 'This is the list of our students\n';
   try {
     const students = await countStudents(DATABASE);
-    res.send(${msg}${students.join('\n')});
+    res.send(`${msg}${students.join('\n')}`);
   } catch (error) {
-    res.send(${msg}${error.message});
+    res.send(`${msg}${error.message}`);
   }
 });
 
 app.listen(port, () => {
-  //   console.log(Example app listening at http://localhost:${port});
+  //   console.log(`Example app listening at http://localhost:${port}`);
 });
 
 module.exports = app;
